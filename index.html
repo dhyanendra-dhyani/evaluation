@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khasi Translation Evaluation</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  padding: 10px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.3rem;
+  padding: 15px 10px;
+  background: linear-gradient(135deg, #4a90d9, #357abd);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.instructions {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.instructions strong {
+  color: #856404;
+}
+
+.progress-bar-container {
+  background: #e0e0e0;
+  border-radius: 10px;
+  height: 20px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #66bb6a);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: white;
+  font-weight: bold;
+  min-width: 40px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.card.answered {
+  border-color: #4caf50;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 10px 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header .badge {
+  background: rgba(255,255,255,0.25);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+}
+
+.card-header .check-icon {
+  display: none;
+  font-size: 1.2rem;
+}
+
+.card.answered .card-header .check-icon {
+  display: inline;
+}
+
+.english-text {
+  padding: 12px 15px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.english-text::before {
+  content: "🇬🇧 ";
+}
+
+.options-container {
+  padding: 10px;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  position: relative;
+}
+
+.option:active {
+  transform: scale(0.98);
+}
+
+.option.selected-a {
+  border-color: #4a90d9;
+  background: #e8f0fe;
+  box-shadow: 0 0 0 1px #4a90d9;
+}
+
+.option.selected-b {
+  border-color: #e67e22;
+  background: #fef5e7;
+  box-shadow: 0 0 0 1px #e67e22;
+}
+
+.option-label {
+  font-weight: bold;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.option-label.label-a {
+  background: #4a90d9;
+}
+
+.option-label.label-b {
+  background: #e67e22;
+}
+
+.option-radio {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.option.selected-a .option-radio,
+.option.selected-b .option-radio {
+  border-color: #4caf50;
+  background: #4caf50;
+}
+
+.option.selected-a .option-radio::after,
+.option.selected-b .option-radio::after {
+  content: "✓";
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.both-equal-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 2px dashed #aaa;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #666;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.both-equal-btn:active {
+  transform: scale(0.98);
+}
+
+.both-equal-btn.selected-eq {
+  border-color: #9b59b6;
+  background: #f4ecf7;
+  color: #9b59b6;
+  font-weight: bold;
+  border-style: solid;
+}
+
+.submit-section {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(76,175,80,0.3);
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 400px;
+  font-weight: bold;
+}
+
+.submit-btn:active {
+  transform: scale(0.97);
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.result-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.result-modal.show {
+  display: flex;
+}
+
+.result-content {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.result-content h2 {
+  margin-bottom: 15px;
+  color: #4caf50;
+}
+
+.result-summary {
+  text-align: left;
+  margin: 15px 0;
+}
+
+.result-summary div {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+.close-modal {
+  margin-top: 15px;
+  padding: 10px 30px;
+  background: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.download-btn {
+  margin-top: 10px;
+  padding: 10px 30px;
+  background: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  body { padding: 20px 15%; }
+  h1 { font-size: 1.6rem; }
+  .option { font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<h1>📝 Khasi Translation<br>Evaluation Form</h1>
+
+<div class="instructions">
+  <strong>Instructions:</strong> For each English sentence below, two Khasi translations are shown — 
+  <span style="color:#4a90d9;font-weight:bold;">Translation A (GPT)</span> and 
+  <span style="color:#e67e22;font-weight:bold;">Translation B (Gemini)</span>. 
+  Tap on the <strong>better translation</strong>, or tap <strong>"Both Equal"</strong> if neither is clearly better.
+</div>
+
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progressBar" style="width:0%">0%</div>
+</div>
+
+<div id="cardsContainer"></div>
+
+<div class="submit-section">
+  <button class="submit-btn" id="submitBtn" onclick="submitEvaluation()" disabled>
+    Submit Evaluation ✅
+  </button>
+  <p style="margin-top:10px;font-size:0.8rem;color:#999;" id="remainingText">Please evaluate all 40 sentences</p>
+</div>
+
+<div class="result-modal" id="resultModal">
+  <div class="result-content">
+    <h2>✅ Thank You!</h2>
+    <p>Your evaluation has been recorded.</p>
+    <div class="result-summary" id="resultSummary"></div>
+    <button class="download-btn" onclick="downloadCSV()">📥 Download Results (CSV)</button>
+    <br>
+    <button class="close-modal" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+const data = [
+  {
+    eng: "There is scope and need for much better performance.",
+    gpt: "Don bynta paidbah bad donkam ban pynbha shibun ïa ka jingïaid shaphrang.",
+    gemini: "Don ka lad bad ka jingdonkam ban pynbha shuh shuh ia ka jingtreikam."
+  },
+  {
+    eng: "So, with rated flux phi f, this is the Te rated that we can generate.",
+    gpt: "Kumta, bad ka rated flux phi f, kane ka long ka Te rated kaba ngi lah ban pynmih.",
+    gemini: "Te, bad u rated flux phi f, kane long ka Te rated ba ngi lah ban pynmih."
+  },
+  {
+    eng: "original department",
+    gpt: "ka tnat ba nyngkong",
+    gemini: "ka tnat tynrai"
+  },
+  {
+    eng: "Four killed in gunbattle",
+    gpt: "Saw ngut la ïap ha ka jingïasiat paidbah",
+    gemini: "Saw ngut kiba iap ha ka jingiather kuli"
+  },
+  {
+    eng: "Ardent's remarks came after students led by the Hynniewtrep Youths' Council (HYC) marched from the MBoSE office to Lachumiere, IGP to the Additional Secretariat where Ardent was sitting. took place today, January 30, 2023.",
+    gpt: "Ki jingïathuh jong u Ardent ki la wan hadien ba ki samla pule ba la lamkhmat da ka Hynniewtrep Youths' Council (HYC) ki la paidbah na ka ophis MBoSE sha Lachumiere, na IGP sha ka Additional Secretariat ha kaba u Ardent u dang shong. Kane ka la jia hynne ka 30 tarik Kyllalyngkot, 2023.",
+    gemini: "Ki kyntien u Ardent ki wan hadien ba ki khynnah skul ba laialam da ka Hynniewtrep Youths' Council (HYC) ki la iaid paidbah na ophis MBoSE sha Lachumiere, IGP shaduh ka Additional Secretariat ha kaba u Ardent u shong. kane ka la jia mynta ka sngi, 30 Kyllalyngkot, 2023."
+  },
+  {
+    eng: "How do you give time to a book?",
+    gpt: "Kumno phi ai por ïa ka kot?",
+    gemini: "Kumno phi ai por ban pule ia ka kot?"
+  },
+  {
+    eng: "Why not pause after reading a portion and ask yourself, What did this passage teach me about Jehovah?",
+    gpt: "Balei phim shongthait hadien ba phi la pule bynta bad kylli ïa lade, \"Kane ka bynta ka hikai aiu ïa nga shaphang U Jehovah?\"",
+    gemini: "Balei phim sangeh shwa hadien ba la pule katto katne bad kylli ialade, Kaei kane ka bynta ka hikai ianga shaphang U Jehobah?"
+  },
+  {
+    eng: "This led to the Second Sino-Japanese War in 1937.",
+    gpt: "Kane ka la lam sha ka Second Sino-Japanese War ha u snem 1937.",
+    gemini: "Kane ka la ialam sha ka Thma Sino-Japanese kaba Ar ha u snem 1937."
+  },
+  {
+    eng: "The Court finally observed that law forms the ground upon which multiple strands of history, ideology and religion can compete.",
+    gpt: "Ha kaba kut ka Ïingbishar ka la kdew ba ka aiñ ka long ka nongrim halor kaba bun jait ki histori, ki jingïohi jingmut bad ka niam ki lah ban ïa jingïakhun.",
+    gemini: "Ka Iingbishar khatduh ka la iohi ba ka ain ka long ka nongrim ha kaba ki bynta bapher bapher jong ka history, jingmut jingpyrkhat bad ka niam ki lah ban iaknieh."
+  },
+  {
+    eng: "NPR 100: Barber's Adagio",
+    gpt: "NPR 100: Adagio jong u Barber",
+    gemini: "NPR 100: Adagio jong u Barber"
+  },
+  {
+    eng: "Even the dangerous bacteria that cause cholera and typhoid are killed by this powerful acid barrier.",
+    gpt: "Wat ki khñiang jingpang kiba maham kiba wanrah ïa ka cholera bad typhoid ruh la pynïap da kane ka jingïada paidbah jong ka acid kaba khlaiñ.",
+    gemini: "Wat ki khniang jingpang ba pynmynsaw kiba pynpang cholera bad typhoid ki shah pyniap ha kane ka asid ba khlain."
+  },
+  {
+    eng: "Names of former finance minister Haseeb Drabu's two brothers Ajaz Hussain Drabu and Iftikhar Ahmad Drabu are also mentioned in the list.",
+    gpt: "Ki kyrteng jong ki arngut ki para jong u myntri pla tyngka barim u Haseeb Drabu, kata u Ajaz Hussain Drabu bad u Iftikhar Ahmad Drabu, ruh la kdew ha ka thup.",
+    gemini: "Ki kyrteng jong ki arngut ki para u myntri pla pisa barim u Haseeb Drabu, u Ajaz Hussain Drabu bad u Iftikhar Ahmad Drabu ruh la kdew ha ka thup."
+  },
+  {
+    eng: "The revised system developed by this group provides the current framework for understanding pulmonary hypertension.",
+    gpt: "Ka revised system kaba la pynroi da kane ka kynhun ka ai ïa ka framework kaba mynta ban sngewthuh ïa ka pulmonary hypertension.",
+    gemini: "Ka rukom pyniaid ba la pynthymmai da kane ka kynhun ka ai ia ka nongrim mynta ban sngewthuh ia ka jingkiew snam ha ki tor."
+  },
+  {
+    eng: "Waiving of Farm Loan",
+    gpt: "Ka jingïamap ïa ka ram rep",
+    gemini: "Ka jingmap ia ka ram rep"
+  },
+  {
+    eng: "This is the path to success.",
+    gpt: "Kane ka long ka lynti sha ka jingïoh jingjop.",
+    gemini: "Kane ka long ka lynti sha ka jingjop."
+  },
+  {
+    eng: "except I see her strength in you.",
+    gpt: "lait noh ba nga ïohi ïa ka bor jong ka ha me.",
+    gemini: "lait tang ba nga iohi ia ka bor jong ka ha phi."
+  },
+  {
+    eng: "Its not going to happen anymore, he asserted.",
+    gpt: "Kam dei shuh ban jia, u la ban jur.",
+    gemini: "Kam nym jia shuh, u la ban jur."
+  },
+  {
+    eng: "Justice Madaan said drug trafficking had ruined lives of young men and women.",
+    gpt: "U Justice Madaan u la ong ba ka khaïi drok ka la pynjot ïa ka jingim jong ki samla shynrang bad kynthei.",
+    gemini: "U Nongbishar Madaan u la ong ba ka jingkhaii drok ka la pynjot ia ka jingim jong ki samla shynrang bad kynthei."
+  },
+  {
+    eng: "From tomorrow, I'm starting shooting for 'Pallikoodam.'",
+    gpt: "Naduh lashai, ngan sdang ka shooting na ka bynta ka 'Pallikoodam'.",
+    gemini: "Naduh lashai, ngan sdang ban shon phlim na bynta ka 'Pallikoodam.'"
+  },
+  {
+    eng: "Shares of Tata Tea are an active stock.",
+    gpt: "Ki shares jong ka Tata Tea ki long ka stock kaba bynta khlaiñ.",
+    gemini: "Ki share jong ka Tata Tea ki long ki stock kiba iaid iew bha."
+  },
+  {
+    eng: "She enjoys singing and dancing, in particular ballet, jazz and salsa.",
+    gpt: "Ka sngewbha ban rwai bad ban shad, khamtam ka ballet, jazz bad salsa.",
+    gemini: "Ka sngewtynnad ban rwai bad shad, khamtam ka ballet, jazz bad salsa."
+  },
+  {
+    eng: "Now, by charging interval between the powder particles, what I want to mean so, if I have 2 powder particle, if I have two different powder particles.",
+    gpt: "Mynta, da kaba pynsiew interval hapdeng ki bynta jong u powder particle, kaba nga mut ka long ba lada nga don 2 tylli ki powder particle, lada nga don ar jait ki powder particle bapher bapher.",
+    gemini: "Mynta, da kaba pynkylla ia ka jingjngai hapdeng ki pui pui, kaba nga mut ka long, lada nga don 2 tylli ki pui pui, lada nga don ar tylli ki pui pui kiba pher."
+  },
+  {
+    eng: "After stiff opposition, the state government had decided to withdraw the decision.",
+    gpt: "Hadien ka jingïakhih pyrshah kaba jur, ka sorkar jylla ka la rai ban weng noh ïa ka rai.",
+    gemini: "Hadien ka jingpyrshah kaba jur, ka sorkar jylla ka la rai ban weng noh ia ka rai."
+  },
+  {
+    eng: "He added that necessary directions would be passed to the officials concerned for the immediate resolution of their issues.",
+    gpt: "U la bynrap ba yn pynmih ïa ki jingbthah kiba donkam sha ki ophisar kiba dei peit khnang ban pynbeit mardor ïa ki jingeh jong ki.",
+    gemini: "U la bynrap ba ki jingbthah ba donkam yn sa phah sha ki ophisar ba dei peit ban pynbeit mardor ia ki jingeh jong ki."
+  },
+  {
+    eng: "What was Moses to tell them?",
+    gpt: "Kaei kaba u Moses u dei ban ong ha ki?",
+    gemini: "Kaei ba u Moses u dei ban iathuh ha ki?"
+  },
+  {
+    eng: "Accordingly, on average, people spend nearly 7 hours on the internet.",
+    gpt: "Katkum kane, ha ka averaji, ki briew ki pynlut jan 7 kynta ha ka internet.",
+    gemini: "Katkum kane, haba khein kyllum, ki briew ki pynlut kumba 7 kynta ha intanet."
+  },
+  {
+    eng: "Many FTP hosts whose purpose is to provide software updates will allow anonymous logins.",
+    gpt: "Bun ki FTP hosts kiba ka jingthmu jong ki ka long ban ai jingïoh ïa ki software updates kin shah ïa ka anonymous login.",
+    gemini: "Bun ki FTP host kiba ka jingthmu jong ki ka long ban ai ki software update kin shah ia ki bym don kyrteng ban login."
+  },
+  {
+    eng: "She was probably named 'Aisha' after Prophet Muhammad's wife, ishah bint Ab Bakr.",
+    gpt: "Ka lah ban long ba la ai kyrteng ïa ka 'Aisha' hadien ka tnga jong u Prophet Muhammad, ka Aishah bint Abi Bakr.",
+    gemini: "Lehse la jer kyrteng ia ka 'Aisha' bud na ka tnga u Prophet Muhammad, ka ishah bint Ab Bakr."
+  },
+  {
+    eng: "Meanwhile, forest department officials have said they have initiated an inquiry into the matter.",
+    gpt: "Ha kajuh ka por, ki ophisar jong ka tnat khlaw ki la ong ba ki la sdang ka jingtohkit halor kane ka kam.",
+    gemini: "Ha kajuh ka por, ki ophisar jong ka tnat khlaw ki la ong ba ki la sdang ia ka jingtohkit halor kane ka kam."
+  },
+  {
+    eng: "The IPL is an Indian tournament.",
+    gpt: "Ka IPL ka long ka jingïalehkai paidbah jong ka ri India.",
+    gemini: "Ka IPL ka long ka lympung ialehkai jong ka India."
+  },
+  {
+    eng: "All the colleges of Dhaka city were converted into intermediate colleges and were put under the jurisdiction of the board.",
+    gpt: "Baroh ki kolej ha nongbah Dhaka la pynkylla sha ki intermediate colleges bad la buh ïa ki hapoh ka bor peit jong ka board.",
+    gemini: "Baroh ki kolej ha sor Dhaka la pynkylla sha ki intermediate kolej bad la buh hapoh ka jingpeit jong ka board."
+  },
+  {
+    eng: "But the project didn't materialise.",
+    gpt: "Hynrei ka project kam shym la urlong.",
+    gemini: "Hynrei kane ka prokram kam shym la urlong."
+  },
+  {
+    eng: "Airborne pollutants are responsible for about one third of deaths from stroke, chronic respiratory disease, and lung cancer, as well as one quarter of deaths from heart attack.",
+    gpt: "Ki jingjaboh ha ka lyer ki dei kiba don bynta ha kumba shi bynta na ki lai bynta jong ki jingïap na ka stroke, chronic respiratory disease bad lung cancer, bad kumba shi bynta na ki saw bynta jong ki jingïap na ka heart attack.",
+    gemini: "Ki jaboh ha ka lyer ki long ki daw jong kumba shi bynta na ka lai bynta jong ki jingiap na ka stroke, jingpang ring mynsiem ba neh slem, bad bampong u tor, kumjuh ruh shi bynta na ka saw bynta jong ki jingiap na ka jingktha klong snam."
+  },
+  {
+    eng: "Portia Lee James DeGeneres (born Amanda Lee Rogers; January 31, 1973), known professionally as Portia de Rossi (), is an Australian-American actress, model and philanthropist.",
+    gpt: "Ka Portia Lee James DeGeneres (ba la kha kum ka Amanda Lee Rogers; 31 tarik Kyllalyngkot, 1973), kaba la tip paidbah kum ka Portia de Rossi, ka long ka Australian-American actress, model bad philanthropist.",
+    gemini: "Ka Portia Lee James DeGeneres (la kha kum ka Amanda Lee Rogers; 31 Kyllalyngkot, 1973), ba la tip paidbah kum ka Portia de Rossi (), ka long ka nongialehkai, model bad nongiarap briew ba na Australia-America."
+  },
+  {
+    eng: "Also Read: Academy Awards 2017: Viola Davis wins best supporting actress Oscar",
+    gpt: "Pule ruh: Academy Awards 2017: Ka Viola Davis ka jop ïa ka Oscar kum ka best supporting actress.",
+    gemini: "Pule Ruh : Academy Awards 2017 : Ka Viola Davis ka jop ia ka best supporting actress Oscar"
+  },
+  {
+    eng: "The obvious advantage of this plan is more data.",
+    gpt: "Ka jingïoh myntoi kaba shai jong kane ka plan ka long ba don bun shuh ki data.",
+    gemini: "Ka jingmyntoi ba shai jong kane ka plan ka long ba don bun ki data."
+  },
+  {
+    eng: "Of these, 14 cases were reported from Silchar Medical College and Hospital (SMCH), 11 cases from Mahendra Mohan Choudhury Hospital in Pan Bazar, 8 cases from Fakhruddin Ali Ahmed Medical College, Barpeta and 3 cases from Jorhat Medical College and Hospital (GMCH), 2 cases of Gauhati Medical College and Hospital.",
+    gpt: "Na kine, 14 tylli ki cases la pyntip na Silchar Medical College and Hospital (SMCH), 11 tylli na Mahendra Mohan Choudhury Hospital ha Pan Bazar, 8 tylli na Fakhruddin Ali Ahmed Medical College, Barpeta bad 3 tylli na Jorhat Medical College and Hospital (GMCH), 2 tylli na Gauhati Medical College and Hospital.",
+    gemini: "Na kine, 14 tylli ki case la ioh na Silchar Medical College and Hospital (SMCH), 11 tylli ki case na Mahendra Mohan Choudhury Hospital ha Pan Bazar, 8 tylli na Fakhruddin Ali Ahmed Medical College, Barpeta bad 3 tylli na Jorhat Medical College and Hospital (GMCH), 2 tylli na Gauhati Medical College and Hospital."
+  },
+  {
+    eng: "Don't give any vote to Modi.",
+    gpt: "Wat ai kano kano ka vote ïa u Modi.",
+    gemini: "Wat ai vote satia ia u Modi."
+  },
+  {
+    eng: "This had disappeared by 1844.",
+    gpt: "Kane ka la jah noh haduh u snem 1844.",
+    gemini: "Kane ka la jah noh ha u snem 1844."
+  },
+  {
+    eng: "They are within a larger industrial estate of modern sheds.",
+    gpt: "Ki don hapoh kawei ka industrial estate kaba heh jong ki sheds ba thymmai.",
+    gemini: "Ki don hapoh ka jaka karkhana kaba heh bad ki iingsap kiba mynta."
+  },
+  {
+    eng: "And in the '80s now, they give up Communist planning and they go for market economy, and it moves faster even than social life.",
+    gpt: "Bad ha ki snem '80 mynta, ki iehnoh ïa ka Communist planning bad ki leit sha ka market economy, bad ka ïaid sted shuh sted wat ban ïa ka imlang sahlang ruh.",
+    gemini: "Bad ha ki snem '80 mynta, ki la iehnoh ia ka jingpynbeit jong ki Communist bad ki la leit sha ka iew pdeng, bad ka stet ban ia ka jingim lang ha imlang sahlang."
+  },
+  {
+    eng: "Causes behind stomach problems: Change in diet: Choice of eating high-fat foods rather than daily foods can be the cause of stomach problems.",
+    gpt: "Ki daw kiba don bynta ha ki jingeh ka kpoh: Ka jingkylla ha ka bam ka dih: Ka jied ban bam ïa ki bam kiba bun phniang ban ïa ka bam man ka sngi ka lah ban long ka daw jong ki jingeh ka kpoh.",
+    gemini: "Ki daw jong ki jingeh ha kpoh : Jingkylla ha ka jingbam : Ka jingjied ban bam ki jingbam ba bun khera ban ia ki jingbam man ka sngi ka lah ban long ka daw jong ki jingeh ha kpoh."
+  },
+  {
+    eng: "So there you have it enemies in the lowland to the west, Gods servants in the higher country to the east.",
+    gpt: "Kumta, hangta phi ïohi ïa ki nongshun ha ka ri lum pyllang sha ka sepngi, bad ki shakri U Blei ha ka thaiñ lum sha ka mihngi.",
+    gemini: "Te hangta phi don ki nongshun ha ki them shaphang sepngi, ki shakri U Blei ha ki ri lum shaphang mihngi."
+  },
+  {
+    eng: "How many of them can stand,\" asked Bah Wahlang.",
+    gpt: "\"Katno ngut na ki kin lah ban ïeng?\" la kylli u Bah Wahlang.",
+    gemini: "Katno ngut na ki kiba lah ban ieng, la kylli u Bah Wahlang."
+  },
+  {
+    eng: "Support Dalai Lama for return to Tibet: Lawmakers to Barack Obama",
+    gpt: "Ai jingïarap ïa u Dalai Lama ban leit phai sha Tibet: ki lawmakers sha u Barack Obama.",
+    gemini: "Kyrshan ia u Dalai Lama ban phai sha Tibet : Ki nongthaw ain sha u Barack Obama"
+  },
+  {
+    eng: "So we started in that area.",
+    gpt: "Kumta ngi la sdang ha kata ka thaiñ.",
+    gemini: "Te ngi la sdang ha kato ka thain."
+  },
+  {
+    eng: "It has done this by buying and building new locomotives and carriages.",
+    gpt: "Ka la leh ïa kane da kaba thied bad tei ïa ki locomotives bad carriages ba thymmai.",
+    gemini: "Ka la leh ia kane da kaba thied bad shna ia ki enjin rel bad ki kali rel kiba thymmai."
+  },
+  {
+    eng: "For example, Professor Stephen Kotkin, in his book Magnetic Mountain, argues that Stalinism was the culmination of the Enlightenment project.",
+    gpt: "Kum ka nuksa, u Professor Stephen Kotkin, ha ka kot jong u Magnetic Mountain, u jingïale jingïaroh ba ka Stalinism ka long ka jingïapynkut jong ka Enlightenment project.",
+    gemini: "Kum ka nuksa, u Professor Stephen Kotkin, ha ka kot jong u ka Magnetic Mountain, u pyni nia ba ka Stalinism ka dei ka kut jong ka jingthmu Enlightenment."
+  },
+  {
+    eng: "And hence this is referred to as a PEM fuel cell stack proton exchange membrane fuel cell stack okay.",
+    gpt: "Bad kumta la khot ïa kane kum ka PEM fuel cell stack, proton exchange membrane fuel cell stack, bha.",
+    gemini: "Bad namarkata la khot ia kane kum ka PEM fuel cell stack ne proton exchange membrane fuel cell stack to."
+  },
+  {
+    eng: "Encyclopedia of percussion instruments.",
+    gpt: "Encyclopedia jong ki bynta tem jingïar paidbah.",
+    gemini: "Ka Ensaiklopedia jong ki tiar tem kiba hap shoh ne tied."
+  }
+];
+
+const answers = {};
+
+function buildCards() {
+  const container = document.getElementById('cardsContainer');
+  
+  // Randomize which appears as Option A/B per card
+  data.forEach((item, index) => {
+    const cardNum = index + 1;
+    // Randomly assign to prevent bias
+    const showGPTFirst = Math.random() > 0.5;
+    const optA = showGPTFirst ? { text: item.gpt, source: 'GPT' } : { text: item.gemini, source: 'Gemini' };
+    const optB = showGPTFirst ? { text: item.gemini, source: 'Gemini' } : { text: item.gpt, source: 'GPT' };
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.setAttribute('data-opta-source', optA.source);
+    card.setAttribute('data-optb-source', optB.source);
+
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="badge">Sentence ${cardNum} / ${data.length}</span>
+        <span class="check-icon">✅</span>
+      </div>
+      <div class="english-text">${item.eng}</div>
+      <div class="options-container">
+        <button class="option" onclick="selectOption(${index}, 'A')" id="opt-${index}-A">
+          <div class="option-radio"></div>
+          <span class="option-label label-a">Translation A</span><br>
+          ${optA.text}
+        </button>
+        <button class="option" onclick="selectOption(${index}, 'B')" id="opt-${index}-B">
+          <div class="option-radio"></div>
+          <span class="option-label label-b">Translation B</span><br>
+          ${optB.text}
+        </button>
+        <button class="both-equal-btn" onclick="selectOption(${index}, 'EQ')" id="opt-${index}-EQ">
+          🤝 Both are Equal
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(index, choice) {
+  // Clear previous
+  document.getElementById(`opt-${index}-A`).className = 'option';
+  document.getElementById(`opt-${index}-B`).className = 'option';
+  document.getElementById(`opt-${index}-EQ`).className = 'both-equal-btn';
+
+  if (choice === 'A') {
+    document.getElementById(`opt-${index}-A`).classList.add('selected-a');
+  } else if (choice === 'B') {
+    document.getElementById(`opt-${index}-B`).classList.add('selected-b');
+  } else {
+    document.getElementById(`opt-${index}-EQ`).classList.add('selected-eq');
+  }
+
+  const card = document.getElementById(`card-${index}`);
+  const sourceA = card.getAttribute('data-opta-source');
+  const sourceB = card.getAttribute('data-optb-source');
+
+  let winner;
+  if (choice === 'A') winner = sourceA;
+  else if (choice === 'B') winner = sourceB;
+  else winner = 'Equal';
+
+  answers[index] = { choice, winner, sentence: data[index].eng };
+  card.classList.add('answered');
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = data.length;
+  const done = Object.keys(answers).length;
+  const pct = Math.round((done / total) * 100);
+  const bar = document.getElementById('progressBar');
+  bar.style.width = pct + '%';
+  bar.textContent = `${done}/${total} (${pct}%)`;
+
+  const remaining = total - done;
+  const remainText = document.getElementById('remainingText');
+  const btn = document.getElementById('submitBtn');
+
+  if (remaining === 0) {
+    btn.disabled = false;
+    remainText.textContent = '✅ All sentences evaluated! Ready to submit.';
+    remainText.style.color = '#4caf50';
+  } else {
+    btn.disabled = true;
+    remainText.textContent = `${remaining} sentence(s) remaining`;
+    remainText.style.color = '#999';
+  }
+}
+
+function submitEvaluation() {
+  let gptWins = 0, geminiWins = 0, equal = 0;
+
+  Object.values(answers).forEach(a => {
+    if (a.winner === 'GPT') gptWins++;
+    else if (a.winner === 'Gemini') geminiWins++;
+    else equal++;
+  });
+
+  const summary = document.getElementById('resultSummary');
+  summary.innerHTML = `
+    <div style="font-size:1.1rem;font-weight:bold;text-align:center;margin-bottom:10px;">
+      📊 Results Summary
+    </div>
+    <div>🔵 <strong>GPT better:</strong> ${gptWins} sentences (${Math.round(gptWins/data.length*100)}%)</div>
+    <div>🟠 <strong>Gemini better:</strong> ${geminiWins} sentences (${Math.round(geminiWins/data.length*100)}%)</div>
+    <div>🟣 <strong>Both Equal:</strong> ${equal} sentences (${Math.round(equal/data.length*100)}%)</div>
+    <div style="margin-top:10px;font-weight:bold;text-align:center;font-size:1.1rem;">
+      ${gptWins > geminiWins ? '🏆 GPT wins overall!' : geminiWins > gptWins ? '🏆 Gemini wins overall!' : '🤝 It\'s a tie!'}
+    </div>
+  `;
+
+  document.getElementById('resultModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('resultModal').classList.remove('show');
+}
+
+function downloadCSV() {
+  let csv = 'Sentence No,English,GPT Translation,Gemini Translation,Winner\n';
+  data.forEach((item, i) => {
+    const a = answers[i];
+    const winner = a ? a.winner : 'Not evaluated';
+    csv += `${i+1},"${item.eng.replace(/"/g,'""')}","${item.gpt.replace(/"/g,'""')}","${item.gemini.replace(/"/g,'""')}","${winner}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'khasi_translation_evaluation.csv';
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initialize
+buildCards();
+</script>
+
+</body>
+</html>
