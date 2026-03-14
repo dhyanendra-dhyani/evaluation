@@ -39,20 +39,46 @@ h1 {
   line-height: 1.5;
 }
 
-.instructions strong {
-  color: #856404;
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
 }
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.dot-gpt { background: #4a90d9; }
+.dot-gemini { background: #e67e22; }
+.dot-equal { background: #9b59b6; }
 
 .progress-bar-container {
   background: #e0e0e0;
   border-radius: 10px;
-  height: 20px;
+  height: 24px;
   margin-bottom: 15px;
   overflow: hidden;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .progress-bar {
@@ -63,10 +89,10 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: white;
   font-weight: bold;
-  min-width: 40px;
+  min-width: 50px;
 }
 
 .card {
@@ -87,7 +113,7 @@ h1 {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   padding: 10px 15px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
@@ -96,9 +122,9 @@ h1 {
 
 .card-header .badge {
   background: rgba(255,255,255,0.25);
-  padding: 3px 10px;
+  padding: 3px 12px;
   border-radius: 12px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
 .card-header .check-icon {
@@ -121,7 +147,9 @@ h1 {
 }
 
 .english-text::before {
-  content: "🇬🇧 ";
+  content: "🇬🇧 English: ";
+  font-weight: 700;
+  color: #555;
 }
 
 .options-container {
@@ -132,7 +160,7 @@ h1 {
   display: block;
   width: 100%;
   text-align: left;
-  padding: 12px 15px;
+  padding: 12px 45px 12px 15px;
   margin-bottom: 8px;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
@@ -148,13 +176,13 @@ h1 {
   transform: scale(0.98);
 }
 
-.option.selected-a {
+.option.selected-gpt {
   border-color: #4a90d9;
   background: #e8f0fe;
   box-shadow: 0 0 0 1px #4a90d9;
 }
 
-.option.selected-b {
+.option.selected-gemini {
   border-color: #e67e22;
   background: #fef5e7;
   box-shadow: 0 0 0 1px #e67e22;
@@ -163,18 +191,18 @@ h1 {
 .option-label {
   font-weight: bold;
   display: inline-block;
-  padding: 2px 8px;
+  padding: 2px 10px;
   border-radius: 6px;
   font-size: 0.75rem;
   margin-bottom: 6px;
   color: white;
 }
 
-.option-label.label-a {
+.label-gpt {
   background: #4a90d9;
 }
 
-.option-label.label-b {
+.label-gemini {
   background: #e67e22;
 }
 
@@ -182,8 +210,8 @@ h1 {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border: 2px solid #ccc;
   border-radius: 50%;
   display: flex;
@@ -192,17 +220,17 @@ h1 {
   transition: all 0.3s;
 }
 
-.option.selected-a .option-radio,
-.option.selected-b .option-radio {
+.option.selected-gpt .option-radio,
+.option.selected-gemini .option-radio {
   border-color: #4caf50;
   background: #4caf50;
 }
 
-.option.selected-a .option-radio::after,
-.option.selected-b .option-radio::after {
+.option.selected-gpt .option-radio::after,
+.option.selected-gemini .option-radio::after {
   content: "✓";
   color: white;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
 }
 
@@ -302,7 +330,48 @@ h1 {
 .result-summary div {
   padding: 8px 0;
   border-bottom: 1px solid #eee;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+}
+
+.result-bar {
+  display: flex;
+  height: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.result-bar-gpt {
+  background: #4a90d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: width 0.5s;
+}
+
+.result-bar-gemini {
+  background: #e67e22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: width 0.5s;
+}
+
+.result-bar-equal {
+  background: #9b59b6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: width 0.5s;
 }
 
 .close-modal {
@@ -327,6 +396,23 @@ h1 {
   cursor: pointer;
 }
 
+.evaluator-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin: 10px auto;
+  display: block;
+  text-align: center;
+}
+
+.evaluator-input:focus {
+  border-color: #4a90d9;
+  outline: none;
+}
+
 @media (min-width: 768px) {
   body { padding: 20px 15%; }
   h1 { font-size: 1.6rem; }
@@ -339,14 +425,22 @@ h1 {
 <h1>📝 Khasi Translation<br>Evaluation Form</h1>
 
 <div class="instructions">
-  <strong>Instructions:</strong> For each English sentence below, two Khasi translations are shown — 
-  <span style="color:#4a90d9;font-weight:bold;">Translation A (GPT)</span> and 
-  <span style="color:#e67e22;font-weight:bold;">Translation B (Gemini)</span>. 
-  Tap on the <strong>better translation</strong>, or tap <strong>"Both Equal"</strong> if neither is clearly better.
+  <strong>Instructions:</strong> For each English sentence, two Khasi translations are provided:<br><br>
+  🔵 <strong>Translation A = GPT</strong><br>
+  🟠 <strong>Translation B = Gemini</strong><br><br>
+  👉 <strong>Tap</strong> the better translation, or tap <strong>"Both Equal"</strong> if neither is clearly better.
+</div>
+
+<input type="text" class="evaluator-input" id="evaluatorName" placeholder="Enter your name (optional)">
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-gpt"></div>A = GPT</div>
+  <div class="legend-item"><div class="legend-dot dot-gemini"></div>B = Gemini</div>
+  <div class="legend-item"><div class="legend-dot dot-equal"></div>Equal</div>
 </div>
 
 <div class="progress-bar-container">
-  <div class="progress-bar" id="progressBar" style="width:0%">0%</div>
+  <div class="progress-bar" id="progressBar" style="width:0%">0 / 50</div>
 </div>
 
 <div id="cardsContainer"></div>
@@ -355,13 +449,14 @@ h1 {
   <button class="submit-btn" id="submitBtn" onclick="submitEvaluation()" disabled>
     Submit Evaluation ✅
   </button>
-  <p style="margin-top:10px;font-size:0.8rem;color:#999;" id="remainingText">Please evaluate all 40 sentences</p>
+  <p style="margin-top:10px;font-size:0.85rem;color:#999;" id="remainingText">Please evaluate all 50 sentences</p>
 </div>
 
 <div class="result-modal" id="resultModal">
   <div class="result-content">
     <h2>✅ Thank You!</h2>
     <p>Your evaluation has been recorded.</p>
+    <div class="result-bar" id="resultBar"></div>
     <div class="result-summary" id="resultSummary"></div>
     <button class="download-btn" onclick="downloadCSV()">📥 Download Results (CSV)</button>
     <br>
@@ -628,19 +723,11 @@ const answers = {};
 function buildCards() {
   const container = document.getElementById('cardsContainer');
   
-  // Randomize which appears as Option A/B per card
   data.forEach((item, index) => {
     const cardNum = index + 1;
-    // Randomly assign to prevent bias
-    const showGPTFirst = Math.random() > 0.5;
-    const optA = showGPTFirst ? { text: item.gpt, source: 'GPT' } : { text: item.gemini, source: 'Gemini' };
-    const optB = showGPTFirst ? { text: item.gemini, source: 'Gemini' } : { text: item.gpt, source: 'GPT' };
-
     const card = document.createElement('div');
     card.className = 'card';
     card.id = `card-${index}`;
-    card.setAttribute('data-opta-source', optA.source);
-    card.setAttribute('data-optb-source', optB.source);
 
     card.innerHTML = `
       <div class="card-header">
@@ -649,17 +736,17 @@ function buildCards() {
       </div>
       <div class="english-text">${item.eng}</div>
       <div class="options-container">
-        <button class="option" onclick="selectOption(${index}, 'A')" id="opt-${index}-A">
+        <button class="option" onclick="selectOption(${index}, 'GPT')" id="opt-${index}-GPT">
           <div class="option-radio"></div>
-          <span class="option-label label-a">Translation A</span><br>
-          ${optA.text}
+          <span class="option-label label-gpt">A — GPT</span><br>
+          ${item.gpt}
         </button>
-        <button class="option" onclick="selectOption(${index}, 'B')" id="opt-${index}-B">
+        <button class="option" onclick="selectOption(${index}, 'Gemini')" id="opt-${index}-Gemini">
           <div class="option-radio"></div>
-          <span class="option-label label-b">Translation B</span><br>
-          ${optB.text}
+          <span class="option-label label-gemini">B — Gemini</span><br>
+          ${item.gemini}
         </button>
-        <button class="both-equal-btn" onclick="selectOption(${index}, 'EQ')" id="opt-${index}-EQ">
+        <button class="both-equal-btn" onclick="selectOption(${index}, 'Equal')" id="opt-${index}-Equal">
           🤝 Both are Equal
         </button>
       </div>
@@ -669,30 +756,21 @@ function buildCards() {
 }
 
 function selectOption(index, choice) {
-  // Clear previous
-  document.getElementById(`opt-${index}-A`).className = 'option';
-  document.getElementById(`opt-${index}-B`).className = 'option';
-  document.getElementById(`opt-${index}-EQ`).className = 'both-equal-btn';
+  // Clear previous selections
+  document.getElementById(`opt-${index}-GPT`).className = 'option';
+  document.getElementById(`opt-${index}-Gemini`).className = 'option';
+  document.getElementById(`opt-${index}-Equal`).className = 'both-equal-btn';
 
-  if (choice === 'A') {
-    document.getElementById(`opt-${index}-A`).classList.add('selected-a');
-  } else if (choice === 'B') {
-    document.getElementById(`opt-${index}-B`).classList.add('selected-b');
+  if (choice === 'GPT') {
+    document.getElementById(`opt-${index}-GPT`).classList.add('selected-gpt');
+  } else if (choice === 'Gemini') {
+    document.getElementById(`opt-${index}-Gemini`).classList.add('selected-gemini');
   } else {
-    document.getElementById(`opt-${index}-EQ`).classList.add('selected-eq');
+    document.getElementById(`opt-${index}-Equal`).classList.add('selected-eq');
   }
 
-  const card = document.getElementById(`card-${index}`);
-  const sourceA = card.getAttribute('data-opta-source');
-  const sourceB = card.getAttribute('data-optb-source');
-
-  let winner;
-  if (choice === 'A') winner = sourceA;
-  else if (choice === 'B') winner = sourceB;
-  else winner = 'Equal';
-
-  answers[index] = { choice, winner, sentence: data[index].eng };
-  card.classList.add('answered');
+  answers[index] = { winner: choice, sentence: data[index].eng };
+  document.getElementById(`card-${index}`).classList.add('answered');
 
   updateProgress();
 }
@@ -703,7 +781,7 @@ function updateProgress() {
   const pct = Math.round((done / total) * 100);
   const bar = document.getElementById('progressBar');
   bar.style.width = pct + '%';
-  bar.textContent = `${done}/${total} (${pct}%)`;
+  bar.textContent = `${done} / ${total} (${pct}%)`;
 
   const remaining = total - done;
   const remainText = document.getElementById('remainingText');
@@ -713,10 +791,12 @@ function updateProgress() {
     btn.disabled = false;
     remainText.textContent = '✅ All sentences evaluated! Ready to submit.';
     remainText.style.color = '#4caf50';
+    remainText.style.fontWeight = 'bold';
   } else {
     btn.disabled = true;
     remainText.textContent = `${remaining} sentence(s) remaining`;
     remainText.style.color = '#999';
+    remainText.style.fontWeight = 'normal';
   }
 }
 
@@ -729,15 +809,23 @@ function submitEvaluation() {
     else equal++;
   });
 
+  const total = data.length;
+  const gptPct = Math.round(gptWins / total * 100);
+  const geminiPct = Math.round(geminiWins / total * 100);
+  const eqPct = Math.round(equal / total * 100);
+
+  document.getElementById('resultBar').innerHTML = `
+    <div class="result-bar-gpt" style="width:${gptPct}%">${gptPct}%</div>
+    <div class="result-bar-gemini" style="width:${geminiPct}%">${geminiPct}%</div>
+    <div class="result-bar-equal" style="width:${eqPct}%">${eqPct}%</div>
+  `;
+
   const summary = document.getElementById('resultSummary');
   summary.innerHTML = `
-    <div style="font-size:1.1rem;font-weight:bold;text-align:center;margin-bottom:10px;">
-      📊 Results Summary
-    </div>
-    <div>🔵 <strong>GPT better:</strong> ${gptWins} sentences (${Math.round(gptWins/data.length*100)}%)</div>
-    <div>🟠 <strong>Gemini better:</strong> ${geminiWins} sentences (${Math.round(geminiWins/data.length*100)}%)</div>
-    <div>🟣 <strong>Both Equal:</strong> ${equal} sentences (${Math.round(equal/data.length*100)}%)</div>
-    <div style="margin-top:10px;font-weight:bold;text-align:center;font-size:1.1rem;">
+    <div>🔵 <strong>GPT better:</strong> ${gptWins} / ${total} sentences (${gptPct}%)</div>
+    <div>🟠 <strong>Gemini better:</strong> ${geminiWins} / ${total} sentences (${geminiPct}%)</div>
+    <div>🟣 <strong>Both Equal:</strong> ${equal} / ${total} sentences (${eqPct}%)</div>
+    <div style="margin-top:15px;font-weight:bold;text-align:center;font-size:1.2rem;padding:10px;background:#f8f9fa;border-radius:8px;">
       ${gptWins > geminiWins ? '🏆 GPT wins overall!' : geminiWins > gptWins ? '🏆 Gemini wins overall!' : '🤝 It\'s a tie!'}
     </div>
   `;
@@ -750,18 +838,20 @@ function closeModal() {
 }
 
 function downloadCSV() {
-  let csv = 'Sentence No,English,GPT Translation,Gemini Translation,Winner\n';
+  const evaluator = document.getElementById('evaluatorName').value || 'Anonymous';
+  let csv = 'Evaluator,Sentence No,English,GPT Translation (A),Gemini Translation (B),Winner\n';
+  
   data.forEach((item, i) => {
     const a = answers[i];
     const winner = a ? a.winner : 'Not evaluated';
-    csv += `${i+1},"${item.eng.replace(/"/g,'""')}","${item.gpt.replace(/"/g,'""')}","${item.gemini.replace(/"/g,'""')}","${winner}"\n`;
+    csv += `"${evaluator}",${i+1},"${item.eng.replace(/"/g,'""')}","${item.gpt.replace(/"/g,'""')}","${item.gemini.replace(/"/g,'""')}","${winner}"\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'khasi_translation_evaluation.csv';
+  link.download = `khasi_eval_${evaluator.replace(/\s/g,'_')}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
